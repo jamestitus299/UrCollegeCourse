@@ -1,26 +1,14 @@
 from fastapi import FastAPI
-
-from .models import User
-
+from api import users, sections, courses
 
 # API
 app = FastAPI()
-
-
-users = []
-
-
 
 @app.get("/")
 async def home():
     return "Hello World"
 
-@app.get("/users")
-async def get_users():
-    return users
+app.include_router(users.router)
+app.include_router(sections.router)
+app.include_router(courses.router)
 
-
-@app.post("/users")
-async def post_users(user : User):
-    users.append(user)
-    return {"message": "added"}
