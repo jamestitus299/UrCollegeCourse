@@ -6,10 +6,6 @@ router = APIRouter()
 
 users = []
 
-@router.get("/")
-async def home():
-    return "Hello World"
-
 @router.get("/users", response_model=List[User])
 async def get_users():
     return users
