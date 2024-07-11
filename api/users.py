@@ -1,22 +1,42 @@
-from fastapi import FastAPI, Path, APIRouter
-from typing import List, Optional
-from .models import User
+from os import stat
+from typing import Optional, List
 
-router = APIRouter()
+import fastapi
+from fastapi import Depends, HTTPException
+from sqlalchemy.orm import Session
 
-users = []
+from db.dbsetup import get_db
+from pydantic_schemas.user import UserCreate, User
+from pydantic_schemas.course import Course
+from api.utils.users import get_user, get_user_by_email, get_users, create_user
+from api.utils.courses import get_user_courses
+
+router = fastapi.APIRouter()
+
 
 @router.get("/users", response_model=List[User])
-async def get_users():
+async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    users = get_users(db, skip=skip, limit=limit)
     return users
 
 
-@router.post("/users")
-async def post_users(user : User):
-    users.append(user)
-    return {"message": "added"}
+@router.post("/users", response_model=User, status_code=201)
+async def create_new_user(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = get_user_by_email(db=db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email is already registered")
+    return create_user(db=db, user=user)
 
 
-@router.get("/users/{id}")
-def get_user_by_id(id : int = Path(..., description="The id of the User you want to query.", gt=-1)):
-    return users[id]
+@router.get("/users/{user_id}", response_model=User)
+async def read_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = get_user(db=db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
+
+
+@router.get("/users/{user_id}/courses", response_model=List[Course])
+async def read_user_courses(user_id: int, db: Session = Depends(get_db)):
+    courses = get_user_courses(user_id=user_id, db=db)
+    return courses

@@ -3,8 +3,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Enter your connecton string
-SQLALCHEMY_DATABASE_URL = "postgresql://user:password@host:port/database"
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={}, future=True

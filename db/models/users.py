@@ -1,4 +1,3 @@
-import enum
 
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Enum, Text
 from sqlalchemy.orm import relationship
@@ -7,6 +6,7 @@ from sqlalchemy.sql.expression import null
 from ..dbsetup import Base
 from .mixins import Timestamp
 
+import enum
 
 class Role(enum.Enum):
     teacher = 1
@@ -19,7 +19,12 @@ class User(Timestamp, Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(100), unique=True, index=True, nullable=False)
     role = Column(Enum(Role))
+    is_active = Column(Boolean, default=False)
+
     profile = relationship("Profile", back_populates="owner", uselist=False)
+    student_courses = relationship("StudentCourse", back_populates="student")
+    student_content_blocks = relationship(
+        "CompletedContentBlock", back_populates="student")
 
 
 class Profile(Timestamp, Base):
@@ -32,4 +37,7 @@ class Profile(Timestamp, Base):
     is_active = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     owner = relationship("User", back_populates="profile")
+    
+
+
     

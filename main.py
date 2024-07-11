@@ -12,7 +12,7 @@ app = FastAPI()
 
 @app.get("/")
 async def home():
-    return "Hello World"
+    return "Hello College"
 
 app.include_router(users.router)
 app.include_router(sections.router)

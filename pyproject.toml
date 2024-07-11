@@ -13,6 +13,7 @@ pydantic = "^2.8.2"
 psycopg2-binary = "^2.9.9"
 sqlalchemy = "^2.0.31"
 alembic = "^1.13.2"
+python-dotenv = "^1.0.1"
 
 
 [build-system]

@@ -86,3 +86,7 @@ class CompletedContentBlock(Timestamp, Base):
 
     student = relationship(User, back_populates="student_content_blocks")
     content_block = relationship(ContentBlock, back_populates="completed_content_blocks")
+
+
+
+    
