@@ -30,16 +30,16 @@ async def read_course(course_id: int, db: Session = Depends(get_db)):
     return db_course
 
 
-@router.patch("/courses/{course_id}")
-async def update_course():
-    return {"courses": []}
+# @router.patch("/courses/{course_id}")
+# async def update_course():
+#     return {"courses": []}
 
 
-@router.delete("/courses/{course_id}")
-async def delete_course():
-    return {"courses": []}
+# @router.delete("/courses/{course_id}")
+# async def delete_course():
+#     return {"courses": []}
 
 
-@router.get("/courses/{course_id}/sections")
-async def read_course_sections():
-    return {"courses": []}
+# @router.get("/courses/{course_id}/sections")
+# async def read_course_sections():
+#     return {"courses": []}
